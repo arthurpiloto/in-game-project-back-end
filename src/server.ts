@@ -12,8 +12,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.all('*', requestIntercepter)
-app.use('/', siteRoutes)
+app.all('*', requestIntercepter);
+app.use('/', siteRoutes);
 
 const runServer = (port: number, server: http.Server) => {
     server.listen(port, () => {
