@@ -15,7 +15,7 @@ export const addUser: RequestHandler = async (req, res) => {
     })
     const body = addUserSchema.safeParse(req.body);
     if (!body.success) return res.json({ error: MESSAGE_ERROR.INVALID_DATA });
-    
+
     const newUser = await user.insertUser({
         nome: body.data.nome,
         email: body.data.email,
@@ -29,3 +29,21 @@ export const addUser: RequestHandler = async (req, res) => {
 
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
 }
+
+export const loginUser: RequestHandler = async (req, res) => {
+
+}
+
+// const driverLogin = async (driverLogin, driverPassword) => {
+//     if (driverLogin == '' || driverLogin == undefined || driverPassword == '' || driverPassword == undefined) {
+//         return { status: 400, message: MESSAGE_ERROR.REQUIRED_FIELDS }
+//     } else {
+//         const login = await loginDriver(driverLogin, driverPassword)
+
+//         if (login) {
+//             return { status: 200, message: login }
+//         } else {
+//             return { message: MESSAGE_ERROR.NOT_FOUND_DB, status: 404 }
+//         }
+//     }
+// }
