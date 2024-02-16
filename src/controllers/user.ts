@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { date, z } from "zod";
+import { z } from "zod";
 import * as user from '../models/DAO/user';
 import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../utils/config";
 
@@ -15,7 +15,7 @@ export const addUser: RequestHandler = async (req, res) => {
     })
     const body = addUserSchema.safeParse(req.body);
     if (!body.success) return res.json({ error: MESSAGE_ERROR.INVALID_DATA });
-
+    
     const newUser = await user.insertUser({
         nome: body.data.nome,
         email: body.data.email,
