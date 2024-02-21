@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { z } from "zod";
-import * as user from '../models/DAO/user';
+import * as user from "../models/DAO/user";
+import * as jwt from "../middlewares/jwt";
 import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../utils/config";
 
 export const addUser: RequestHandler = async (req, res) => {
@@ -11,10 +12,10 @@ export const addUser: RequestHandler = async (req, res) => {
         id_posicao: z.number().min(1).max(6),
         id_sexo: z.number().min(1).max(2),
         data_nasc: z.coerce.date(),
-        foto: z.string()
-    })
+        foto: z.string().optional()
+    });
     const body = addUserSchema.safeParse(req.body);
-    if (!body.success) return res.json({ error: MESSAGE_ERROR.INVALID_DATA });
+    if (!body.success) return res.status(400).json({ error: MESSAGE_ERROR.INVALID_DATA });
 
     const newUser = await user.insertUser({
         nome: body.data.nome,
@@ -31,19 +32,17 @@ export const addUser: RequestHandler = async (req, res) => {
 }
 
 export const loginUser: RequestHandler = async (req, res) => {
+    const loginUserSchema = z.object({
+        email: z.string(),
+        senha: z.string()
+    });
+    const body = loginUserSchema.safeParse(req.body);
+    if (!body.success) return res.status(400).json({ error: MESSAGE_ERROR.INVALID_DATA });
 
+    const userData = await user.findUser(body.data.email, body.data.senha);
+    if (userData) {
+        const tokenJWT = await jwt.createJWT(userData);
+        return res.status(tokenJWT.status).json({ token: tokenJWT.token, id_user: tokenJWT.user_id })
+    }
+    return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
 }
-
-// const driverLogin = async (driverLogin, driverPassword) => {
-//     if (driverLogin == '' || driverLogin == undefined || driverPassword == '' || driverPassword == undefined) {
-//         return { status: 400, message: MESSAGE_ERROR.REQUIRED_FIELDS }
-//     } else {
-//         const login = await loginDriver(driverLogin, driverPassword)
-
-//         if (login) {
-//             return { status: 200, message: login }
-//         } else {
-//             return { message: MESSAGE_ERROR.NOT_FOUND_DB, status: 404 }
-//         }
-//     }
-// }

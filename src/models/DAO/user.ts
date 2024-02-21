@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { UserRegister } from '../global';
+import { JsonArray } from '@prisma/client/runtime/library';
 
 const prisma = new PrismaClient();
 
@@ -20,24 +21,14 @@ export const insertUser = async (data: UserRegister) => {
 
 export const findUser = async (email: string, password: string) => {
     try {
-        let sql = ``
+        let sql = `SELECT * FROM tbl_user WHERE email = '${email}' AND senha = md5('${password}');`
+
+        const result: JsonArray = await prisma.$queryRawUnsafe(sql);
+
+        if (result.length > 0) return result[0];
+        return false;
+
     } catch (err) {
-        
+        return false
     }
 }
-
-// const loginDriver = async (driverLogin, driverPassword) => {
-//     try {
-//         let sql = `SELECT * FROM tbl_motorista WHERE email = '${driverLogin}' AND senha = md5('${driverPassword}');`
-
-//         const result = await prisma.$queryRawUnsafe(sql)
-
-//         if (result.length > 0) {
-//             return result
-//         } else {
-//             return false
-//         }
-//     } catch (err) {
-//         return false
-//     }
-// }

@@ -1,19 +1,18 @@
-import jwt from "jsonwebtoken";
-import { User } from '../models/global';
+import JWT from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
-export const createJWT = async (data: User) => {
-    const token = jwt.sign(
-        { id: data.id }, process.env.SECRET as string, { expiresIn: '5d' }
+export const createJWT = async (data: any) => {
+    const token = JWT.sign(
+        { id: data.id }, process.env.JWT_SECRET_KEY as string, { expiresIn: '5d' }
     );
     const id = data.id;
 
-    return {  }
+    return { status: 200, token: token, user_id: id }
 }
 
-const validateJwt = async (data: string) => {
+export const validateJwt = async (data: string) => {
     let jwtStatus;
-    jwt.verify(data, process.env.SECRET as string, (err, decode) => {
+    JWT.verify(data, process.env.SECRET as string, (err, decode) => {
         if (err) {
             jwtStatus = false
         } else {
@@ -23,13 +22,13 @@ const validateJwt = async (data: string) => {
     return jwtStatus;
 }
 
-const verifyJwt = async (req: Request, res: Response, next: NextFunction) => {
+export const verifyJwt = async (req: Request, res: Response, next: NextFunction) => {
     let token = req.headers['x-access-token'];
-    const authenticatedToken = await validateJwt(token)
+    const authenticatedToken = await validateJwt(token as string)
 
-    if(authenticatedToken) {
+    if (authenticatedToken) {
         next()
     } else {
-        return response.status(401).end()
+        return res.status(401).end()
     }
 }
