@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { z } from "zod";
+import { number, z } from "zod";
 import * as user from "../models/DAO/user";
 import * as jwt from "../middlewares/jwt";
 import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../utils/config";
@@ -42,7 +42,14 @@ export const loginUser: RequestHandler = async (req, res) => {
     const userData = await user.findUser(body.data.email, body.data.senha);
     if (userData) {
         const tokenJWT = await jwt.createJWT(userData);
-        return res.status(tokenJWT.status).json({ token: tokenJWT.token, id_user: tokenJWT.user_id })
+        return res.status(tokenJWT.status).json({ token: tokenJWT.token, id_user: tokenJWT.user_id });
     }
+    return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
+}
+
+export const getUserById: RequestHandler = async (req, res) => {
+    const { id } = req.params;
+    const userData = await user.selectDiverById(parseInt(id));
+    if (userData) return res.status(200).json(userData);
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
 }

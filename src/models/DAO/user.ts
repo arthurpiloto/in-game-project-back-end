@@ -32,3 +32,17 @@ export const findUser = async (email: string, password: string) => {
         return false
     }
 }
+
+export const selectDiverById = async (id: number) => {
+    try {
+        let sql = `SELECT * FROM tbl_user WHERE id = ${id};`
+
+        const result: JsonArray = await prisma.$queryRawUnsafe(sql);
+
+        if (result.length > 0) return result[0];
+        return false;
+
+    } catch (err) {
+        return false;
+    }
+}
