@@ -1,5 +1,6 @@
 import { Router } from "express";
-import * as user from '../controllers/user'
+import * as user from '../controllers/user';
+import * as content from '../controllers/content';
 
 const router = Router();
 
@@ -9,4 +10,6 @@ router.post('/user', user.addUser);
 router.post('/user/login', user.loginUser);
 router.get('/user/:id', user.getUserById);
 
-export default router
+router.get('/content/videos', content.getVideosContent);
+
+export default router;
