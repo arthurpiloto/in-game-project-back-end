@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { number, z } from "zod";
+import { z } from "zod";
 import * as user from "../models/DAO/user";
 import * as jwt from "../middlewares/jwt";
 import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../utils/config";
