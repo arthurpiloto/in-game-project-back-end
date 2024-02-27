@@ -11,5 +11,6 @@ router.post('/user/login', user.loginUser);
 router.get('/user/:id', user.getUserById);
 
 router.get('/content/videos', content.getVideosContent);
+router.post('/content/video', content.addVideo)
 
 export default router;
