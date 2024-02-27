@@ -36,7 +36,9 @@ export const selectVideosContent = async () => {
         INNER JOIN tbl_tipo_conteudo
             ON tbl_video.id_tipo_conteudo = tbl_tipo_conteudo.id
         INNER JOIN tbl_tipo_treino
-            ON tbl_video.id_tipo_treino = tbl_tipo_treino.id;`
+            ON tbl_video.id_tipo_treino = tbl_tipo_treino.id
+            
+        ORDER BY tbl_video.id DESC;`
 
         const result: JsonArray = await prisma.$queryRawUnsafe(sql);
 
