@@ -14,9 +14,9 @@ export const validateJwt = async (data: string) => {
     let jwtStatus;
     JWT.verify(data, process.env.SECRET as string, (err, decode) => {
         if (err) {
-            jwtStatus = false
+            jwtStatus = false;
         } else {
-            jwtStatus = true
+            jwtStatus = true;
         }
     });
     return jwtStatus;
@@ -24,11 +24,11 @@ export const validateJwt = async (data: string) => {
 
 export const verifyJwt = async (req: Request, res: Response, next: NextFunction) => {
     let token = req.headers['x-access-token'];
-    const authenticatedToken = await validateJwt(token as string)
+    const authenticatedToken = await validateJwt(token as string);
 
     if (authenticatedToken) {
-        next()
+        next();
     } else {
-        return res.status(401).end()
+        return res.status(401).end();
     }
 }

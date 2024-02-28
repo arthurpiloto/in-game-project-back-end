@@ -29,7 +29,7 @@ export const findUser = async (email: string, password: string) => {
         return false;
 
     } catch (err) {
-        return false
+        return false;
     }
 }
 

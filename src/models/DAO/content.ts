@@ -11,7 +11,7 @@ export const insertVideo = async (data: VideoRegister) => {
 
         const result = await prisma.$executeRawUnsafe(sql);
 
-        if (result) return true
+        if (result) return true;
         return false;
 
     } catch (err) {
