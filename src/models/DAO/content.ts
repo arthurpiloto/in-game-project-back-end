@@ -67,3 +67,33 @@ export const insertText = async (data: TextRegister) => {
 }
 
 
+export const selectTextsContent = async () => {
+    try {
+        let sql = `SELECT CAST(tbl_texto.id AS DECIMAL) AS id, tbl_texto.foto_capa, tbl_texto.duracao, tbl_texto.titulo, tbl_texto.subtitulo, tbl_texto.corpo_texto,
+        CAST(tbl_posicao.id AS DECIMAL) AS id_posicao, tbl_posicao.posicao,
+        CAST(tbl_dificuldade.id AS DECIMAL) AS id_dificuldade, tbl_dificuldade.dificuldade,
+        CAST(tbl_tipo_conteudo.id AS DECIMAL) AS id_tipo_conteudo, tbl_tipo_conteudo.tipo AS tipo_conteudo,
+        CAST(tbl_tipo_treino.id AS DECIMAL) AS id_tipo_treino, tbl_tipo_treino.tipo AS tipo_treino
+        
+        FROM tbl_texto
+        
+        INNER JOIN tbl_posicao
+            ON tbl_texto.id_posicao = tbl_posicao.id
+        INNER JOIN tbl_dificuldade
+            ON tbl_texto.id_dificuldade = tbl_dificuldade.id
+        INNER JOIN tbl_tipo_conteudo
+            ON tbl_texto.id_tipo_conteudo = tbl_tipo_conteudo.id
+        INNER JOIN tbl_tipo_treino
+            ON tbl_texto.id_tipo_treino = tbl_tipo_treino.id
+            
+        ORDER BY tbl_texto.id DESC;`
+
+        const result: JsonArray = await prisma.$queryRawUnsafe(sql);
+
+        if (result.length > 0) return result;
+        return false;
+
+    } catch (err) {
+        return false;
+    }
+}

@@ -53,7 +53,7 @@ export const addText: RequestHandler = async (req, res) => {
     const body = addTextSchema.safeParse(req.body);
     if (!body.success) return res.status(400).json({ error: MESSAGE_ERROR.INVALID_DATA });
 
-    const newVideo = await content.insertText({
+    const newText = await content.insertText({
         foto_capa: body.data.foto_capa,
         duracao: body.data.duracao,
         titulo: body.data.titulo,
@@ -63,7 +63,14 @@ export const addText: RequestHandler = async (req, res) => {
         id_dificuldade: body.data.id_dificuldade,
         id_tipo_treino: body.data.id_tipo_treino
     });
-    if (newVideo) return res.status(201).json({ message: MESSAGE_SUCCESS.INSERT_ITEM });
+    if (newText) return res.status(201).json({ message: MESSAGE_SUCCESS.INSERT_ITEM });
 
+    return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
+}
+
+export const getTextsContent: RequestHandler = async (req, res) => {
+    const texts = await content.selectTextsContent();
+
+    if (texts) return res.status(200).json({ textos: texts });
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
 }
