@@ -49,3 +49,21 @@ export const selectVideosContent = async () => {
         return false;
     }
 }
+
+type TextRegister = { titulo: string, subtitulo: string, corpo_texto: string, id_posicao: number, id_dificuldade: number, id_tipo_treino: number, duracao: number, foto_capa: string | undefined }
+export const insertText = async (data: TextRegister) => {
+    try {
+        let sql = `INSERT INTO tbl_texto (titulo, subtitulo, corpo_texto, id_posicao, id_dificuldade, id_tipo_treino, id_tipo_conteudo, duracao, foto_capa)
+        VALUES ('${data.titulo}', '${data.subtitulo}', '${data.corpo_texto}', ${data.id_posicao}, ${data.id_dificuldade}, ${data.id_tipo_treino}, 2, ${data.duracao}, '${data.foto_capa}');`
+
+        const result = await prisma.$executeRawUnsafe(sql);
+
+        if (result) return true;
+        return false;
+
+    } catch (err) {
+        return false;
+    }
+}
+
+
