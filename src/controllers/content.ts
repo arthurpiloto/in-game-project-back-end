@@ -40,6 +40,15 @@ export const getContents: RequestHandler = async (req, res) => {
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
 }
 
+export const getContentsByTipoTreino: RequestHandler = async (req, res) => {
+    const { idTipoTreino } = req.params;
+    
+    const contents = await content.selectContentsByTipoTreino(parseInt(idTipoTreino));
+
+    if (contents) return res.status(200).json({ contents: contents });
+    return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
+}
+
 // All functions related to Videos
 export const getVideosContent: RequestHandler = async (req, res) => {
     const videos = await content.selectVideosContent();

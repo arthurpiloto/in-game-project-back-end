@@ -11,6 +11,7 @@ router.post('/user', user.addUser);
 router.post('/user/login', user.loginUser);
 
 router.get('/contents', content.getContents);
+router.get('/contents/:idTipoTreino', content.getContentsByTipoTreino);
 router.post('/content', content.addContent);
 
 router.get('/content/videos', content.getVideosContent);
