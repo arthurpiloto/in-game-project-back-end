@@ -14,10 +14,11 @@ router.get('/contents', content.getContents);
 router.get('/contents/:idTipoTreino', content.getContentsByTipoTreino);
 router.post('/content', content.addContent);
 
-router.get('/content/videos', content.getVideosContent);
+router.get('/content/videos', content.getVideos);
+router.get('/content/videos/:idTipoTreino', content.getVideosByTipoTreino)
 router.post('/content/video', content.addVideo);
 
-router.get('/content/texts', content.getTextsContent);
+router.get('/content/texts', content.getTexts);
 router.post('/content/text', content.addText);
 
 export default router;

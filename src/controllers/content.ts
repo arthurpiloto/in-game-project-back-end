@@ -42,7 +42,7 @@ export const getContents: RequestHandler = async (req, res) => {
 
 export const getContentsByTipoTreino: RequestHandler = async (req, res) => {
     const { idTipoTreino } = req.params;
-    
+
     const contents = await content.selectContentsByTipoTreino(parseInt(idTipoTreino));
 
     if (contents) return res.status(200).json({ contents: contents });
@@ -50,8 +50,17 @@ export const getContentsByTipoTreino: RequestHandler = async (req, res) => {
 }
 
 // All functions related to Videos
-export const getVideosContent: RequestHandler = async (req, res) => {
+export const getVideos: RequestHandler = async (req, res) => {
     const videos = await content.selectVideosContent();
+
+    if (videos) return res.status(200).json({ videos: videos });
+    return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
+}
+
+export const getVideosByTipoTreino: RequestHandler = async (req, res) => {
+    const { idTipoTreino } = req.params;
+
+    const videos = await content.selectVideosByTipoTreino(parseInt(idTipoTreino));
 
     if (videos) return res.status(200).json({ videos: videos });
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
@@ -86,7 +95,7 @@ export const addText: RequestHandler = async (req, res) => {
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
 }
 
-export const getTextsContent: RequestHandler = async (req, res) => {
+export const getTexts: RequestHandler = async (req, res) => {
     const texts = await content.selectTextsContent();
 
     if (texts) return res.status(200).json({ textos: texts });
