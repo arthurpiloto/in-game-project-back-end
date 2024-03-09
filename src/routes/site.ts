@@ -6,10 +6,11 @@ const router = Router();
 
 router.get('/ping', (req, res) => res.json({ pong: true }));
 
+router.get('/user/:id', user.getUserById);
 router.post('/user', user.addUser);
 router.post('/user/login', user.loginUser);
-router.get('/user/:id', user.getUserById);
 
+router.get('/contents', content.getContents);
 router.post('/content', content.addContent);
 
 router.get('/content/videos', content.getVideosContent);
