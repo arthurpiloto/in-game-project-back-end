@@ -3,11 +3,13 @@ import { JsonArray } from '@prisma/client/runtime/library';
 
 const prisma = new PrismaClient();
 
-type VideoRegister = { titulo: string, subtitulo: string, descricao: string, id_posicao: number, id_dificuldade: number, id_tipo_treino: number, duracao: number, foto_capa: string | undefined }
-export const insertVideo = async (data: VideoRegister) => {
+// All function related to Content in general
+
+// All functions related to Videos
+export const insertVideo = async (descricao: string, id_conteudo: number) => {
     try {
-        let sql = `INSERT INTO tbl_video (titulo, subtitulo, descricao, id_posicao, id_dificuldade, id_tipo_treino, id_tipo_conteudo, duracao, foto_capa)
-        VALUES ('${data.titulo}', '${data.subtitulo}', '${data.descricao}', ${data.id_posicao}, ${data.id_dificuldade}, ${data.id_tipo_treino}, 1, ${data.duracao}, '${data.foto_capa}');`
+        let sql = `INSERT INTO tbl_video (descricao, id_conteudo)
+        VALUES ('${descricao}', ${id_conteudo});`
 
         const result = await prisma.$executeRawUnsafe(sql);
 
@@ -21,7 +23,8 @@ export const insertVideo = async (data: VideoRegister) => {
 
 export const selectVideosContent = async () => {
     try {
-        let sql = `SELECT CAST(tbl_video.id AS DECIMAL) AS id, tbl_video.foto_capa, tbl_video.duracao, tbl_video.titulo, tbl_video.subtitulo, tbl_video.descricao,
+        let sql = `SELECT CAST(tbl_video.id AS DECIMAL) AS id_video, tbl_video.descricao,
+        CAST(tbl_conteudo.id AS DECIMAL) AS id_conteudo, tbl_conteudo.foto_capa, tbl_conteudo.duracao, tbl_conteudo.titulo, tbl_conteudo.subtitulo,
         CAST(tbl_posicao.id AS DECIMAL) AS id_posicao, tbl_posicao.posicao,
         CAST(tbl_dificuldade.id AS DECIMAL) AS id_dificuldade, tbl_dificuldade.dificuldade,
         CAST(tbl_tipo_conteudo.id AS DECIMAL) AS id_tipo_conteudo, tbl_tipo_conteudo.tipo AS tipo_conteudo,
@@ -29,14 +32,16 @@ export const selectVideosContent = async () => {
         
         FROM tbl_video
         
+        INNER JOIN tbl_conteudo
+            ON tbl_video.id_conteudo = tbl_conteudo.id
         INNER JOIN tbl_posicao
-            ON tbl_video.id_posicao = tbl_posicao.id
+            ON tbl_conteudo.id_posicao = tbl_posicao.id
         INNER JOIN tbl_dificuldade
-            ON tbl_video.id_dificuldade = tbl_dificuldade.id
+            ON tbl_conteudo.id_dificuldade = tbl_dificuldade.id
         INNER JOIN tbl_tipo_conteudo
-            ON tbl_video.id_tipo_conteudo = tbl_tipo_conteudo.id
+            ON tbl_conteudo.id_tipo_conteudo = tbl_tipo_conteudo.id
         INNER JOIN tbl_tipo_treino
-            ON tbl_video.id_tipo_treino = tbl_tipo_treino.id
+            ON tbl_conteudo.id_tipo_treino = tbl_tipo_treino.id
             
         ORDER BY tbl_video.id DESC;`
 
@@ -50,11 +55,11 @@ export const selectVideosContent = async () => {
     }
 }
 
-type TextRegister = { titulo: string, subtitulo: string, corpo_texto: string, id_posicao: number, id_dificuldade: number, id_tipo_treino: number, duracao: number, foto_capa: string | undefined }
-export const insertText = async (data: TextRegister) => {
+// All functions related to Texts
+export const insertText = async (corpo_texto: string, id_conteudo: number) => {
     try {
-        let sql = `INSERT INTO tbl_texto (titulo, subtitulo, corpo_texto, id_posicao, id_dificuldade, id_tipo_treino, id_tipo_conteudo, duracao, foto_capa)
-        VALUES ('${data.titulo}', '${data.subtitulo}', '${data.corpo_texto}', ${data.id_posicao}, ${data.id_dificuldade}, ${data.id_tipo_treino}, 2, ${data.duracao}, '${data.foto_capa}');`
+        let sql = `INSERT INTO tbl_texto (corpo_texto, id_conteudo)
+        VALUES ('${corpo_texto}', ${id_conteudo});`
 
         const result = await prisma.$executeRawUnsafe(sql);
 
@@ -66,10 +71,10 @@ export const insertText = async (data: TextRegister) => {
     }
 }
 
-
 export const selectTextsContent = async () => {
     try {
-        let sql = `SELECT CAST(tbl_texto.id AS DECIMAL) AS id, tbl_texto.foto_capa, tbl_texto.duracao, tbl_texto.titulo, tbl_texto.subtitulo, tbl_texto.corpo_texto,
+        let sql = `SELECT CAST(tbl_texto.id AS DECIMAL) AS id_texto, tbl_texto.corpo_texto,
+        CAST(tbl_conteudo.id AS DECIMAL) AS id_conteudo, tbl_conteudo.foto_capa, tbl_conteudo.duracao, tbl_conteudo.titulo, tbl_conteudo.subtitulo,
         CAST(tbl_posicao.id AS DECIMAL) AS id_posicao, tbl_posicao.posicao,
         CAST(tbl_dificuldade.id AS DECIMAL) AS id_dificuldade, tbl_dificuldade.dificuldade,
         CAST(tbl_tipo_conteudo.id AS DECIMAL) AS id_tipo_conteudo, tbl_tipo_conteudo.tipo AS tipo_conteudo,
@@ -77,14 +82,16 @@ export const selectTextsContent = async () => {
         
         FROM tbl_texto
         
+        INNER JOIN tbl_conteudo
+            ON tbl_texto.id_conteudo = tbl_conteudo.id
         INNER JOIN tbl_posicao
-            ON tbl_texto.id_posicao = tbl_posicao.id
+            ON tbl_conteudo.id_posicao = tbl_posicao.id
         INNER JOIN tbl_dificuldade
-            ON tbl_texto.id_dificuldade = tbl_dificuldade.id
+            ON tbl_conteudo.id_dificuldade = tbl_dificuldade.id
         INNER JOIN tbl_tipo_conteudo
-            ON tbl_texto.id_tipo_conteudo = tbl_tipo_conteudo.id
+            ON tbl_conteudo.id_tipo_conteudo = tbl_tipo_conteudo.id
         INNER JOIN tbl_tipo_treino
-            ON tbl_texto.id_tipo_treino = tbl_tipo_treino.id
+            ON tbl_conteudo.id_tipo_treino = tbl_tipo_treino.id
             
         ORDER BY tbl_texto.id DESC;`
 
