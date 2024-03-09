@@ -4,7 +4,34 @@ import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../utils/config";
 import { z } from "zod";
 
 // All function related to Content in general
+export const addContent: RequestHandler = async (req, res) => {
+    const addContentSchema = z.object({
+        foto_capa: z.string().max(500).optional(),
+        duracao: z.number(),
+        titulo: z.string().max(100),
+        subtitulo: z.string().max(150),
+        id_posicao: z.number().min(1).max(6),
+        id_dificuldade: z.number().min(1).max(3),
+        id_tipo_conteudo: z.number().min(1).max(2),
+        id_tipo_treino: z.number().min(1),
+    });
+    const body = addContentSchema.safeParse(req.body);
+    if (!body.success) return res.status(400).json({ error: MESSAGE_ERROR.INVALID_DATA });
 
+    const newContent = await content.insertContent({
+        foto_capa: body.data.foto_capa,
+        duracao: body.data.duracao,
+        titulo: body.data.titulo,
+        subtitulo: body.data.subtitulo,
+        id_posicao: body.data.id_posicao,
+        id_dificuldade: body.data.id_dificuldade,
+        id_tipo_conteudo: body.data.id_tipo_conteudo,
+        id_tipo_treino: body.data.id_tipo_treino,
+    });
+    if (newContent) return res.status(201).json({ message: MESSAGE_SUCCESS.INSERT_ITEM });
+
+    return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
+}
 
 // All functions related to Videos
 export const getVideosContent: RequestHandler = async (req, res) => {

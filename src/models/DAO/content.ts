@@ -4,6 +4,22 @@ import { JsonArray } from '@prisma/client/runtime/library';
 const prisma = new PrismaClient();
 
 // All function related to Content in general
+type Content = { foto_capa: string | undefined, duracao: number, titulo: string, subtitulo: string, id_posicao: number, id_dificuldade: number, id_tipo_conteudo: number, id_tipo_treino: number }
+export const insertContent = async (data: Content) => {
+    try {
+        let sql = `INSERT INTO tbl_conteudo (foto_capa, duracao, titulo, subtitulo, id_posicao, id_dificuldade, id_tipo_conteudo, id_tipo_treino)
+        VALUES ('${data.foto_capa}', ${data.duracao}, '${data.titulo}', '${data.subtitulo}', ${data.id_posicao}, ${data.id_dificuldade}, ${data.id_tipo_conteudo}, ${data.id_tipo_treino});`
+
+        const result = await prisma.$executeRawUnsafe(sql);
+
+        if (result) return true;
+        return false;
+
+    } catch (err) {
+        console.log(err);
+        return false
+    }
+}
 
 // All functions related to Videos
 export const insertVideo = async (descricao: string, id_conteudo: number) => {

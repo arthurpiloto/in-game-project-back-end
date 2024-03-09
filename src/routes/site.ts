@@ -10,6 +10,8 @@ router.post('/user', user.addUser);
 router.post('/user/login', user.loginUser);
 router.get('/user/:id', user.getUserById);
 
+router.post('/content', content.addContent);
+
 router.get('/content/videos', content.getVideosContent);
 router.post('/content/video', content.addVideo);
 
