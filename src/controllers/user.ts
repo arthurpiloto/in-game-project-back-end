@@ -6,13 +6,13 @@ import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../utils/config";
 
 export const addUser: RequestHandler = async (req, res) => {
     const addUserSchema = z.object({
-        nome: z.string(),
-        email: z.string(),
-        senha: z.string(),
+        nome: z.string().max(100),
+        email: z.string().max(320),
+        senha: z.string().max(256),
         id_posicao: z.number().min(1).max(6),
         id_sexo: z.number().min(1).max(2),
         data_nasc: z.coerce.date(),
-        foto: z.string().optional()
+        foto: z.string().max(500).optional()
     });
     const body = addUserSchema.safeParse(req.body);
     if (!body.success) return res.status(400).json({ error: MESSAGE_ERROR.INVALID_DATA });
@@ -39,7 +39,7 @@ export const loginUser: RequestHandler = async (req, res) => {
     const body = loginUserSchema.safeParse(req.body);
     if (!body.success) return res.status(400).json({ error: MESSAGE_ERROR.INVALID_DATA });
 
-    const userData = await user.findUser(body.data.email, body.data.senha);
+    const userData = await user.loginUser(body.data.email, body.data.senha);
     if (userData) {
         const tokenJWT = await jwt.createJWT(userData);
         return res.status(tokenJWT.status).json({ token: tokenJWT.token, id_user: tokenJWT.user_id });
@@ -49,7 +49,7 @@ export const loginUser: RequestHandler = async (req, res) => {
 
 export const getUserById: RequestHandler = async (req, res) => {
     const { id } = req.params;
-    const userData = await user.selectDiverById(parseInt(id));
+    const userData = await user.selectUserById(parseInt(id));
     if (userData) return res.status(200).json(userData);
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
 }

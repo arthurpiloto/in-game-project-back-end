@@ -19,7 +19,7 @@ export const insertUser = async (data: UserRegister) => {
     }
 }
 
-export const findUser = async (email: string, password: string) => {
+export const loginUser = async (email: string, password: string) => {
     try {
         let sql = `SELECT * FROM tbl_user WHERE email = '${email}' AND senha = md5('${password}');`
 
@@ -33,7 +33,21 @@ export const findUser = async (email: string, password: string) => {
     }
 }
 
-export const selectDiverById = async (id: number) => {
+export const findUser = async (email: string) => {
+    try {
+        let sql = `SELECT * FROM tbl_user WHERE email = '${email}' AND;`
+
+        const result: JsonArray = await prisma.$queryRawUnsafe(sql);
+
+        if (result.length > 0) return result[0];
+        return false;
+
+    } catch (err) {
+        return false;
+    }
+}
+
+export const selectUserById = async (id: number) => {
     try {
         let sql = `SELECT * FROM tbl_user WHERE id = ${id};`
 
