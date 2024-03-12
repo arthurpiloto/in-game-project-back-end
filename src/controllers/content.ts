@@ -98,7 +98,7 @@ export const addText: RequestHandler = async (req, res) => {
 export const getTexts: RequestHandler = async (req, res) => {
     const texts = await content.selectTextsContent();
 
-    if (texts) return res.status(200).json({ textos: texts });
+    if (texts) return res.status(200).json({ texts: texts });
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
 }
 
@@ -107,6 +107,6 @@ export const getTextsByTipoTreino: RequestHandler = async (req, res) => {
 
     const texts = await content.selectTextsByTipoTreino(parseInt(idTipoTreino));
 
-    if (texts) return res.status(200).json({ textos: texts });
+    if (texts) return res.status(200).json({ texts: texts });
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
 }
