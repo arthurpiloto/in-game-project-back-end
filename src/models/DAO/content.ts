@@ -214,3 +214,38 @@ export const selectTextsContent = async () => {
         return false;
     }
 }
+
+export const selectTextsByTipoTreino = async (id: number) => {
+    try {
+        let sql = `SELECT CAST(tbl_texto.id AS DECIMAL) AS id_video, tbl_texto.corpo_texto sta,
+        CAST(tbl_conteudo.id AS DECIMAL) AS id_conteudo, tbl_conteudo.foto_capa, tbl_conteudo.duracao, tbl_conteudo.titulo, tbl_conteudo.subtitulo,
+        CAST(tbl_posicao.id AS DECIMAL) AS id_posicao, tbl_posicao.posicao,
+        CAST(tbl_dificuldade.id AS DECIMAL) AS id_dificuldade, tbl_dificuldade.dificuldade,
+        CAST(tbl_tipo_conteudo.id AS DECIMAL) AS id_tipo_conteudo, tbl_tipo_conteudo.tipo AS tipo_conteudo,
+        CAST(tbl_tipo_treino.id AS DECIMAL) AS id_tipo_treino, tbl_tipo_treino.tipo AS tipo_treino
+        
+        FROM tbl_texto
+        
+        INNER JOIN tbl_conteudo
+            ON tbl_texto.id_conteudo = tbl_conteudo.id
+        INNER JOIN tbl_posicao
+            ON tbl_conteudo.id_posicao = tbl_posicao.id
+        INNER JOIN tbl_dificuldade
+            ON tbl_conteudo.id_dificuldade = tbl_dificuldade.id
+        INNER JOIN tbl_tipo_conteudo
+            ON tbl_conteudo.id_tipo_conteudo = tbl_tipo_conteudo.id
+        INNER JOIN tbl_tipo_treino
+            ON tbl_conteudo.id_tipo_treino = tbl_tipo_treino.id
+            
+        WHERE tbl_conteudo.id_tipo_treino = ${id}
+        ORDER BY tbl_texto.id DESC;`
+
+        const result: JsonArray = await prisma.$queryRawUnsafe(sql);
+
+        if (result.length > 0) return result;
+        return false;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+}

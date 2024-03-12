@@ -101,3 +101,12 @@ export const getTexts: RequestHandler = async (req, res) => {
     if (texts) return res.status(200).json({ textos: texts });
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
 }
+
+export const getTextsByTipoTreino: RequestHandler = async (req, res) => {
+    const { idTipoTreino } = req.params;
+
+    const texts = await content.selectTextsByTipoTreino(parseInt(idTipoTreino));
+
+    if (texts) return res.status(200).json({ textos: texts });
+    return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
+}

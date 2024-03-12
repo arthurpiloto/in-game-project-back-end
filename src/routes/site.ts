@@ -15,10 +15,11 @@ router.get('/contents/:idTipoTreino', content.getContentsByTipoTreino);
 router.post('/content', content.addContent);
 
 router.get('/content/videos', content.getVideos);
-router.get('/content/videos/:idTipoTreino', content.getVideosByTipoTreino)
+router.get('/content/videos/:idTipoTreino', content.getVideosByTipoTreino);
 router.post('/content/video', content.addVideo);
 
 router.get('/content/texts', content.getTexts);
+router.get('/content/texts/:idTipoTreino', content.getTextsByTipoTreino);
 router.post('/content/text', content.addText);
 
 export default router;
