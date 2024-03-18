@@ -40,6 +40,15 @@ export const getContents: RequestHandler = async (req, res) => {
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
 }
 
+export const getContentById: RequestHandler = async (req, res) => {
+    const { idContent } = req.params;
+
+    const contentData = await content.selectContentById(parseInt(idContent));
+
+    if (contentData) return res.status(200).json({ content: contentData });
+    return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
+}
+
 export const getContentsByTipoTreino: RequestHandler = async (req, res) => {
     const { idTipoTreino } = req.params;
 

@@ -4,7 +4,7 @@ import { JsonArray } from '@prisma/client/runtime/library';
 const prisma = new PrismaClient();
 
 // All function related to Content in general
-type Content = { foto_capa: string | undefined, duracao: number, titulo: string, subtitulo: string, id_posicao: number, id_dificuldade: number, id_tipo_conteudo: number, id_tipo_treino: number }
+type Content = { foto_capa: string | undefined, duracao: Number, titulo: string, subtitulo: string, id_posicao: Number, id_dificuldade: Number, id_tipo_conteudo: Number, id_tipo_treino: Number }
 export const insertContent = async (data: Content) => {
     try {
         let sql = `INSERT INTO tbl_conteudo (foto_capa, duracao, titulo, subtitulo, id_posicao, id_dificuldade, id_tipo_conteudo, id_tipo_treino)
@@ -50,7 +50,20 @@ export const selectContents = async () => {
     }
 }
 
-export const selectContentsByTipoTreino = async (id: number) => {
+export const selectContentById = async (id: Number) => {
+    try {
+        let sql = `SELECT * FROM tbl_conteudo WHERE id = ${id};`
+
+        const result: JsonArray = await prisma.$queryRawUnsafe(sql);
+        
+        if (result.length > 0) return result;
+        return false;
+    } catch (err) {
+        return false;
+    }
+}
+
+export const selectContentsByTipoTreino = async (id: Number) => {
     try {
         let sql = `SELECT CAST(tbl_conteudo.id AS DECIMAL) AS id_conteudo, tbl_conteudo.foto_capa, tbl_conteudo.duracao, tbl_conteudo.titulo, tbl_conteudo.subtitulo,
         CAST(tbl_posicao.id AS DECIMAL) AS id_posicao, tbl_posicao.posicao,
@@ -81,7 +94,7 @@ export const selectContentsByTipoTreino = async (id: number) => {
 }
 
 // All functions related to Videos
-export const insertVideo = async (descricao: string, id_conteudo: number) => {
+export const insertVideo = async (descricao: string, id_conteudo: Number) => {
     try {
         let sql = `INSERT INTO tbl_video (descricao, id_conteudo)
         VALUES ('${descricao}', ${id_conteudo});`
@@ -130,7 +143,7 @@ export const selectVideosContent = async () => {
     }
 }
 
-export const selectVideosByTipoTreino = async (id: number) => {
+export const selectVideosByTipoTreino = async (id: Number) => {
     try {
         let sql = `SELECT CAST(tbl_video.id AS DECIMAL) AS id_video, tbl_video.descricao,
         CAST(tbl_conteudo.id AS DECIMAL) AS id_conteudo, tbl_conteudo.foto_capa, tbl_conteudo.duracao, tbl_conteudo.titulo, tbl_conteudo.subtitulo,
@@ -166,7 +179,7 @@ export const selectVideosByTipoTreino = async (id: number) => {
 }
 
 // All functions related to Texts
-export const insertText = async (corpo_texto: string, id_conteudo: number) => {
+export const insertText = async (corpo_texto: string, id_conteudo: Number) => {
     try {
         let sql = `INSERT INTO tbl_texto (corpo_texto, id_conteudo)
         VALUES ('${corpo_texto}', ${id_conteudo});`
@@ -215,7 +228,7 @@ export const selectTextsContent = async () => {
     }
 }
 
-export const selectTextsByTipoTreino = async (id: number) => {
+export const selectTextsByTipoTreino = async (id: Number) => {
     try {
         let sql = `SELECT CAST(tbl_texto.id AS DECIMAL) AS id_video, tbl_texto.corpo_texto sta,
         CAST(tbl_conteudo.id AS DECIMAL) AS id_conteudo, tbl_conteudo.foto_capa, tbl_conteudo.duracao, tbl_conteudo.titulo, tbl_conteudo.subtitulo,
