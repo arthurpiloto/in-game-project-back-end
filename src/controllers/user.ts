@@ -17,6 +17,9 @@ export const addUser: RequestHandler = async (req, res) => {
     const body = addUserSchema.safeParse(req.body);
     if (!body.success) return res.status(400).json({ error: MESSAGE_ERROR.INVALID_DATA });
 
+    const verifyUser = await user.findUser(body.data.email);
+    if (verifyUser) return res.status(400).json({ message: MESSAGE_ERROR.EMAIL_EXIST });
+
     const newUser = await user.insertUser({
         nome: body.data.nome,
         email: body.data.email,

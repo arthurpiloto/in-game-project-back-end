@@ -35,11 +35,11 @@ export const loginUser = async (email: string, password: string) => {
 
 export const findUser = async (email: string) => {
     try {
-        let sql = `SELECT * FROM tbl_user WHERE email = '${email}' AND;`
+        let sql = `SELECT * FROM tbl_user WHERE email = '${email}';`
 
         const result: JsonArray = await prisma.$queryRawUnsafe(sql);
 
-        if (result.length > 0) return result[0];
+        if (result.length > 0) return true;
         return false;
 
     } catch (err) {
