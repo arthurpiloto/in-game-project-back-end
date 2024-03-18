@@ -262,3 +262,19 @@ export const selectTextsByTipoTreino = async (id: Number) => {
         return false;
     }
 }
+
+// Function to verify relationship between Content, Videos and Texts
+export const verifyRelationship = async (id: Number) => {
+    try {
+        let sql1 = `SELECT tbl_video.id_conteudo FROM tbl_video WHERE id_conteudo = ${id};`
+        let sql2 = `SELECT tbl_texto.id_conteudo FROM tbl_texto WHERE id_conteudo = ${id};`
+
+        const result1: JsonArray = await prisma.$queryRawUnsafe(sql1);
+        const result2: JsonArray = await prisma.$queryRawUnsafe(sql2);
+
+        if (result1.length > 0 || result2.length > 0) return true;
+        return false;
+    } catch (err) {
+        return false;
+    }
+}

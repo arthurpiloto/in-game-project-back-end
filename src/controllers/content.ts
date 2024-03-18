@@ -83,7 +83,11 @@ export const addVideo: RequestHandler = async (req, res) => {
     const body = addVideoSchema.safeParse(req.body);
     if (!body.success) return res.status(400).json({ error: MESSAGE_ERROR.INVALID_DATA });
 
-    const newVideo = await content.insertVideo(body.data.descricao, body.data.id_conteudo)
+    // Verificação de relacionamento entre conteúdo, texto e vídeo. Um conteúdo pode possuir apenas um filho, ou seja, só pode estar relacionado com um vídeo ou um texto.
+    const verifyContent = await content.verifyRelationship(body.data.id_conteudo);
+    if (verifyContent) return res.status(400).json({ message: MESSAGE_ERROR.UNAVAILABLE_CONTENT });
+
+    const newVideo = await content.insertVideo(body.data.descricao, body.data.id_conteudo);
     if (newVideo) return res.status(201).json({ message: MESSAGE_SUCCESS.INSERT_ITEM });
 
     return res.status(500).json({ error: MESSAGE_ERROR.INTERNAL_ERROR });
@@ -97,6 +101,10 @@ export const addText: RequestHandler = async (req, res) => {
     });
     const body = addTextSchema.safeParse(req.body);
     if (!body.success) return res.status(400).json({ error: MESSAGE_ERROR.INVALID_DATA });
+
+    // Verificação de relacionamento entre conteúdo, texto e vídeo. Um conteúdo pode possuir apenas um filho, ou seja, só pode estar relacionado com um vídeo ou um texto.
+    const verifyContent = await content.verifyRelationship(body.data.id_conteudo);
+    if (verifyContent) return res.status(400).json({ message: MESSAGE_ERROR.UNAVAILABLE_CONTENT });
 
     const newText = await content.insertText(body.data.corpo_texto, body.data.id_conteudo);
     if (newText) return res.status(201).json({ message: MESSAGE_SUCCESS.INSERT_ITEM });
